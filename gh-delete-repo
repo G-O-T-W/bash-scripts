@@ -1,0 +1,36 @@
+
+#!/bin/bash
+
+# Repo name = first argument, otherwise current folder name
+name=${1:-${PWD##*/}}
+owner="G-O-T-W"   # <-- change this to your GitHub username/org
+
+# Ensure we are inside a folder named TOP
+if [[ "$PWD" != *"/TOP/"* ]]; then
+  echo "❌ Error: You must be inside The Odin Project folder to run this script."
+  echo "   Current path: $PWD"
+  exit 1
+fi
+
+echo "⚠️  This will permanently delete:"
+echo "   - GitHub repo: https://github.com/$owner/$name"
+echo "   - Local folder: $(pwd)"
+read -p "Type the repo name ($name) to confirm: " confirm
+
+if [[ "$confirm" != "$name" ]]; then
+  echo "❌ Names did not match. Aborted."
+  exit 1
+fi
+
+# Delete GitHub repo
+if gh repo delete "$owner/$name" --confirm; then
+  echo "✅ GitHub repo deleted."
+else
+  echo "❌ Failed to delete GitHub repo. Aborting."
+  exit 1
+fi
+
+# Delete local folder
+cd ..
+rm -rf "$name"
+echo "✅ Local folder '$name' deleted."

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+name=${1:-${PWD##*/}}
+
+git init -b main
+git branch -m main
+gh repo create ${name} --public --license "MIT"
+git remote add origin git@github.com:G-O-T-W/${name}.git
+git fetch
+git add .
+git commit -m "Initial Commit"
+git rebase origin/main
+git push --set-upstream origin main
+
+echo
+echo Created repo at https://github.com/WebDevSimplified/${name}
